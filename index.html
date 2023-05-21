@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        background-color: #f5f5f5;
+        font-family: Arial, sans-serif;
+      }
+
+      #inputField {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: 0.5s linear;
+        padding: 10px;
+        font-size: 1.2em;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <input id="inputField" type="text" placeholder="Catch me if you can..." />
+    <script>
+      var inputField = document.getElementById('inputField');
+      var threshold = 300;
+
+      function computeSpeed(dist) {
+        return threshold - dist;
+      }
+
+      function computeNewPosition(e, rect, speed) {
+        return {
+          left:
+            e.clientX > rect.left + rect.width / 2
+              ? rect.left + rect.width / 2 - speed
+              : rect.left + rect.width / 2 + speed,
+          top:
+            e.clientY > rect.top + rect.height / 2
+              ? rect.top + rect.height / 2 - speed
+              : rect.top + rect.height / 2 + speed,
+        };
+      }
+
+      function constrainPosition(pos, rect) {
+        return {
+          left: Math.max(0, Math.min(pos.left, window.innerWidth - rect.width)),
+          top: Math.max(0, Math.min(pos.top, window.innerHeight - rect.height)),
+        };
+      }
+
+      function moveToCenterIfAtEdge(pos, rect) {
+        if (
+          pos.left === 0 ||
+          pos.top === 0 ||
+          pos.left === window.innerWidth - rect.width ||
+          pos.top === window.innerHeight - rect.height
+        ) {
+          return {
+            left: window.innerWidth / 2 - rect.width / 2,
+            top: window.innerHeight / 2 - rect.height / 2,
+          };
+        }
+
+        return pos;
+      }
+
+      document.addEventListener('mousemove', function (e) {
+        // Get the current position of the mouse and the input field.
+        var rect = inputField.getBoundingClientRect();
+        // Compute the distance between the mouse and the center of the input field.
+        var distX = Math.abs(e.clientX - (rect.left + rect.width / 2));
+        var distY = Math.abs(e.clientY - (rect.top + rect.height / 2));
+        var dist = Math.sqrt(distX * distX + distY * distY);
+
+        // If the distance is less than a threshold, compute the speed at which the input field should move.
+        if (dist < threshold) {
+          // Compute the new position for the input field.
+          var speed = computeSpeed(dist);
+          // Constrain the position to keep it within the visible window.
+          var newPosition = computeNewPosition(e, rect, speed);
+          newPosition = constrainPosition(newPosition, rect);
+          // If the input field is at the edge of the window, move it back to the center.
+          newPosition = moveToCenterIfAtEdge(newPosition, rect);
+          
+          // Update the position of the input field.
+          inputField.style.left = newPosition.left + 'px';
+          inputField.style.top = newPosition.top + 'px';
+        }
+      });
+    </script>
+  </body>
+</html>
