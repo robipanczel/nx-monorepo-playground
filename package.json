@@ -2,7 +2,7 @@
   "name": "nx-monorepo-playground",
   "version": "0.0.0",
   "license": "MIT",
-  "author": "Róbert Pánczél <robert.panczel@bosch.com> (https://robipanczel.com/)",
+  "author": "Róbert Pánczél <robi.panczel@gmail.com> (https://robipanczel.com/)",
   "scripts": {},
   "private": true,
   "dependencies": {
