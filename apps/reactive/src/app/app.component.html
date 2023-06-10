@@ -2,4 +2,8 @@
 <nx-monorepo-playground-child
   [movieNames]="movieNames$ | async"
 ></nx-monorepo-playground-child>
+<div *ngIf="movies$ | async as mov">
+  {{ mov[0].name }}
+</div>
+hello
 <router-outlet></router-outlet>

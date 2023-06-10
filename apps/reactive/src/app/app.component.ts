@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Observable, Subscription, map, of, repeat, share } from 'rxjs';
 import { ChildComponent } from './child/child.component';
@@ -69,7 +69,7 @@ const movies: Movie[] = [
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent {
   movies$!: Observable<Movie[]>;
   movieNames$!: Observable<string[]>;
   subscriptions: Subscription[] = [];
@@ -77,21 +77,12 @@ export class AppComponent implements OnDestroy {
   constructor() {
     const sharedSource = of(movies)
       .pipe(map((movies) => shuffleArray(movies)))
-      .pipe(repeat({ delay: 5000 }))
+      .pipe(repeat({ delay: 2000 }))
       .pipe(share());
 
     this.movies$ = sharedSource;
     this.movieNames$ = sharedSource.pipe(
       map((movies) => movies.map((m) => m.name))
     );
-
-    this.subscriptions.push(
-      this.movies$.subscribe((x) => console.log(x.map((a) => a.name))),
-      this.movieNames$.subscribe((z) => console.log(z))
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }
