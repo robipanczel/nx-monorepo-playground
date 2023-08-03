@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { concatMap, delay, of, tap } from 'rxjs';
+import { concatMap, delay, of, share, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +7,7 @@ import { concatMap, delay, of, tap } from 'rxjs';
 export class FakeApiService {
   getModule(moduleId: string) {
     return of('asd123', 'qwe123', 'yxc123', 'vbn123', 'fgh123').pipe(
-      concatMap((module) => of(module).pipe(delay(3000))),
+      concatMap((module) => of(module).pipe(delay(6000))),
       tap((module) => {
         if (module === 'vbn123') {
           throw new Error('BIG OOFFF');
